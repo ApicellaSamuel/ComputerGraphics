@@ -42,7 +42,7 @@ image4f load_image4f(const std::string& filename) {
     auto w = 0, h = 0, c = 0;
     //auto pixels = std::unique_ptr<float>(nullptr);
 
-    auto pixelsl = std::unique_ptr<float>(stbi_loadf(filename.c_str(), &w, &h, &c, 4));
+    auto pixelsl = std::unique_ptr<float>(stbi_loadf(filename.c_str(), &w, &h, &c, 0));
 
     if (!pixelsl) return {};
 
@@ -51,10 +51,10 @@ image4f load_image4f(const std::string& filename) {
     auto img = image4f(w, h);
     for(int i = 0; i < w; i++){
         for(int j = 0; j < h; j++){
-            img.at(i, j).x = vec[j * w + i];
-            img.at(i, j).y = vec[j * w + i+1];
-            img.at(i, j).z = vec[j * w + i+2];
-            img.at(i, j).w = vec[j * w + i+3];
+            img.at(i, j).x = vec[i * w + j];
+            img.at(i, j).y = vec[i * w + j+1];
+            img.at(i, j).z = vec[i * w + j+2];
+            img.at(i, j).w = vec[i * w + j+3];
         }
     }
 
@@ -72,10 +72,10 @@ image4b load_image4b(const std::string& filename) {
     auto img = image4b(w, h);
     for(int i = 0; i < w; i++){
         for(int j = 0; j < h; j++){
-            img.at(i, j).x = vec[j * w + i];
-            img.at(i, j).y = vec[j * w + i+1];
-            img.at(i, j).z = vec[j * w + i+2];
-            img.at(i, j).w = vec[j * w + i+3];
+            img.at(i, j).x = vec[i * w + j];
+            img.at(i, j).y = vec[i * w + j+1];
+            img.at(i, j).z = vec[i * w + j+2];
+            img.at(i, j).w = vec[i * w + j+3];
         }
     }
 
@@ -96,8 +96,8 @@ void save_image(const std::string& filename, const image4b& img) {
 
 image4b tonemap(const image4f& hdr, float exposure, bool use_filmic, bool no_srgb) {
     auto img = image4b(hdr.width, hdr.height);
-    for(int j = 0; j < hdr.height; j++){
-        for(int i = 0; i < hdr.width; i++){
+    for(int i = 0; i < hdr.width; i++){
+        for(int j = 0; j < hdr.height; j++){
             img.at(i, j).x = (unsigned char)hdr.at(i, j).x;
             img.at(i, j).y = (unsigned char)hdr.at(i, j).y;
             img.at(i, j).z = (unsigned char)hdr.at(i, j).z;
