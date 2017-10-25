@@ -51,10 +51,10 @@ image4f load_image4f(const std::string& filename) {
     auto img = image4f(w, h);
     for(int i = 0; i < w; i++){
         for(int j = 0; j < h; j++){
-            img.at(i, j).x = vec[j * h + i];
-            img.at(i, j).y = vec[j * h + i+1];
-            img.at(i, j).z = vec[j * h + i+2];
-            img.at(i, j).w = vec[j * h + i+3];
+            img.at(i, j).x = vec[j * w + i];
+            img.at(i, j).y = vec[j * w + i+1];
+            img.at(i, j).z = vec[j * w + i+2];
+            img.at(i, j).w = vec[j * w + i+3];
         }
     }
 
@@ -72,10 +72,10 @@ image4b load_image4b(const std::string& filename) {
     auto img = image4b(w, h);
     for(int i = 0; i < w; i++){
         for(int j = 0; j < h; j++){
-            img.at(i, j).x = vec[j * h + i];
-            img.at(i, j).y = vec[j * h + i+1];
-            img.at(i, j).z = vec[j * h + i+2];
-            img.at(i, j).w = vec[j * h + i+3];
+            img.at(i, j).x = vec[j * w + i];
+            img.at(i, j).y = vec[j * w + i+1];
+            img.at(i, j).z = vec[j * w + i+2];
+            img.at(i, j).w = vec[j * w + i+3];
         }
     }
 
@@ -111,5 +111,5 @@ image4b tonemap(const image4f& hdr, float exposure, bool use_filmic, bool no_srg
 image4b compose(
     const std::vector<image4b>& imgs, bool premultiplied, bool no_srgb) {
     // YOUR CODE GOES HERE -----------------------------------
-    return imgs[1];
+    return imgs[0];
 }
