@@ -40,21 +40,19 @@ using namespace std;
 image4f load_image4f(const std::string& filename) {
 
     auto w = 0, h = 0, c = 0;
-    //auto pixels = std::unique_ptr<float>(nullptr);
 
-    auto pixelsl = std::unique_ptr<float>(stbi_loadf(filename.c_str(), &w, &h, &c, 0));
+    auto pixelsl = stbi_loadf(filename.c_str(), &w, &h, &c, 0);
 
     if (!pixelsl) return {};
 
-    float* vec = pixelsl.get();
-
     auto img = image4f(w, h);
-    for(int i = 0; i < w; i++){
-        for(int j = 0; j < h; j++){
-            img.at(i, j).x = vec[i * w + j];
-            img.at(i, j).y = vec[i * w + j+1];
-            img.at(i, j).z = vec[i * w + j+2];
-            img.at(i, j).w = vec[i * w + j+3];
+    int p = 0;
+    for(int j = 0; j < h; j++){
+        for(int i = 0; i < w; i++){
+            img.at(i, j).x = pixelsl[p++];
+            img.at(i, j).y = pixelsl[p++];
+            img.at(i, j).z = pixelsl[p++];
+            img.at(i, j).w = pixelsl[p++];
         }
     }
 
@@ -63,19 +61,18 @@ image4f load_image4f(const std::string& filename) {
 
 image4b load_image4b(const std::string& filename) {
     auto w = 0, h = 0, c = 0;
-    auto pixelsl =
-        std::unique_ptr<unsigned char>(stbi_load(filename.c_str(), &w, &h, &c, 4));
+    auto pixelsl = stbi_load(filename.c_str(), &w, &h, &c, 4);
+
     if (!pixelsl) return {};
 
-    unsigned char* vec = pixelsl.get();
-
     auto img = image4b(w, h);
-    for(int i = 0; i < w; i++){
+    int p = 0;
         for(int j = 0; j < h; j++){
-            img.at(i, j).x = vec[i * w + j];
-            img.at(i, j).y = vec[i * w + j+1];
-            img.at(i, j).z = vec[i * w + j+2];
-            img.at(i, j).w = vec[i * w + j+3];
+            for(int i = 0; i < w; i++){
+                img.at(i, j).x = pixelsl[p++];
+                img.at(i, j).y = pixelsl[p++];
+                img.at(i, j).z = pixelsl[p++];
+                img.at(i, j).w = pixelsl[p++];
         }
     }
 
