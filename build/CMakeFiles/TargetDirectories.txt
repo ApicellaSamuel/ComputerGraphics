@@ -1,0 +1,5 @@
+/home/sam/Documents/out/build/CMakeFiles/edit_cache.dir
+/home/sam/Documents/out/build/CMakeFiles/hwlib.dir
+/home/sam/Documents/out/build/CMakeFiles/tonemap.dir
+/home/sam/Documents/out/build/CMakeFiles/compose.dir
+/home/sam/Documents/out/build/CMakeFiles/rebuild_cache.dir

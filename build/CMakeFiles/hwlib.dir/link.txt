@@ -1,0 +1,2 @@
+/usr/bin/ar qc ../bin/libhwlib.a  CMakeFiles/hwlib.dir/src/image.cpp.o
+/usr/bin/ranlib ../bin/libhwlib.a

@@ -1,0 +1,1 @@
+/usr/bin/c++   -O3 -DNDEBUG   CMakeFiles/compose.dir/src/compose.cpp.o  -o ../bin/compose ../bin/libhwlib.a 
