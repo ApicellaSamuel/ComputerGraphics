@@ -107,6 +107,18 @@ image4b tonemap(const image4f& hdr, float exposure, bool use_filmic, bool no_srg
 
 image4b compose(
     const std::vector<image4b>& imgs, bool premultiplied, bool no_srgb) {
-    // YOUR CODE GOES HERE -----------------------------------
-    return imgs[0];
+    auto img = image4b(imgs[0].width, imgs[0].height);
+    for(int i = 0; i < img.width; i++){
+        for(int j = 0; j < img.height; j++){
+            /*img.at(i, j).x += (imgs[0].at(i, j).x * imgs[0].at(i, j).w) + ( 1 - imgs[0].at(i, j).w) * (imgs[1].at(i, j).w * imgs[1].at(i, j).x);
+            img.at(i, j).y += (imgs[0].at(i, j).w * imgs[0].at(i, j).y ) + ( 1 - imgs[0].at(i, j).w) * (imgs[1].at(i, j).w * imgs[1].at(i, j).y);
+            img.at(i, j).z += (imgs[0].at(i, j).z * imgs[0].at(i, j).w ) + ( 1 - imgs[0].at(i, j).w) * (imgs[1].at(i, j).w * imgs[1].at(i, j).z);
+            img.at(i, j).w += imgs[0].at(i, j).w + ( 1 - imgs[0].at(i, j).w) * imgs[1].at(i, j).w;*/
+            img.at(i, j).x += imgs[0].at(i, j).x + ( 1 - imgs[0].at(i, j).w) * imgs[1].at(i, j).x;
+            img.at(i, j).y += imgs[0].at(i, j).y + ( 1 - imgs[0].at(i, j).w) * imgs[1].at(i, j).y;
+            img.at(i, j).z += imgs[0].at(i, j).z + ( 1 - imgs[0].at(i, j).w) * imgs[1].at(i, j).z;
+            img.at(i, j).w += imgs[0].at(i, j).w + ( 1 - imgs[0].at(i, j).w) * imgs[1].at(i, j).w;
+        }
+    }
+    return img;
 }
