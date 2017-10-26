@@ -108,26 +108,32 @@ image4b tonemap(const image4f& hdr, float exposure, bool use_filmic, bool no_srg
 image4b compose(
     const std::vector<image4b>& imgs, bool premultiplied, bool no_srgb) {
     auto img = image4b(imgs[0].width, imgs[0].height);
-    if(premultiplied){ cout << "premultiplied\n";}
+    /*if(premultiplied){ cout << "premultiplied\n";}
     else{ cout << "no premultiplied\n";}
     if(no_srgb){ cout << "nosrgb\n";}
-    else{ cout << "srgb\n";}
+    else{ cout << "srgb\n";}*/
     for(int i = 0; i < img.width; i++){
         for(int j = 0; j < img.height; j++){
             //primo metodo per il caso in cui i valori non sono premoltiplicati
-            img.at(i, j).x += pow((  imgs[1].at(i, j).x * imgs[1].at(i, j).w  + ( 1 - imgs[1].at(i, j).w) * (imgs[0].at(i, j).w * imgs[0].at(i, j).x)  )*255.0f, 2.2f);
-            img.at(i, j).y += pow((  imgs[1].at(i, j).y * imgs[1].at(i, j).w  + ( 1 - imgs[1].at(i, j).w) * (imgs[0].at(i, j).w * imgs[0].at(i, j).y)  )*255.0f, 2.2f);
-            img.at(i, j).z += pow((  imgs[1].at(i, j).z * imgs[1].at(i, j).w  + ( 1 - imgs[1].at(i, j).w) * (imgs[0].at(i, j).w * imgs[0].at(i, j).z)  )*255.0f, 2.2f);
-            img.at(i, j).w +=(  imgs[1].at(i, j).w + ( 1 - imgs[1].at(i, j).w) * imgs[0].at(i, j).w  )/255.0f;
-            //secondo metodo per valori premoltiplicati
-            /*img.at(i, j).x += (pow((imgs[1].at(i, j).x/255.0f), 2.2f)  +  ( 1 - imgs[1].at(i, j).w/255.0f )  *  pow((imgs[0].at(i, j).x/255.0f), 2.2f));
-            img.at(i, j).y += (pow((imgs[1].at(i, j).y/255.0f), 2.2f)  +  ( 1 - imgs[1].at(i, j).w/255.0f )  *  pow((imgs[0].at(i, j).y/255.0f), 2.2f));
-            img.at(i, j).z += (pow((imgs[1].at(i, j).z/255.0f), 2.2f)  +  ( 1 - imgs[1].at(i, j).w/255.0f )  *  pow((imgs[0].at(i, j).z/255.0f), 2.2f));
-            img.at(i, j).w += ((imgs[1].at(i, j).w/255.0f)  +  ( 1 - imgs[1].at(i, j).w/255.0f )  *  imgs[0].at(i, j).w/255.0f);*/
-            /*img.at(i, j).x += (imgs[1].at(i, j).x/255.0f)  +  ( 1 - imgs[1].at(i, j).w/255.0f )  *  (imgs[0].at(i, j).x/255.0f);
-            img.at(i, j).y += (imgs[1].at(i, j).y/255.0f)  +  ( 1 - imgs[1].at(i, j).w/255.0f )  *  (imgs[0].at(i, j).y/255.0f);
-            img.at(i, j).z += (imgs[1].at(i, j).z/255.0f)  +  ( 1 - imgs[1].at(i, j).w/255.0f )  *  (imgs[0].at(i, j).z/255.0f);
-            img.at(i, j).w += (imgs[1].at(i, j).w/255.0f)  +  ( 1 - imgs[1].at(i, j).w/255.0f )  *  imgs[0].at(i, j).w/255.0f;*/
+
+            auto compAx = pow(imgs[1].at(i, j).x * 255.0f, 2.2f);
+            auto compAy = pow(imgs[1].at(i, j).y * 255.0f, 2.2f);
+            auto compAz = pow(imgs[1].at(i, j).z * 255.0f, 2.2f);
+            auto alphaA = imgs[1].at(i, j).w/255.0f;
+
+            auto compBx = pow(imgs[0].at(i, j).x * 255.0f, 2.2f);
+            auto compBy = pow(imgs[0].at(i, j).y * 255.0f, 2.2f);
+            auto compBz = pow(imgs[0].at(i, j).z * 255.0f, 2.2f);
+            auto alphaB = imgs[0].at(i, j).w/255.0f;
+
+            /*img.at(i, j).x += compAx * alphaA  + (255 - alphaA) * (alphaB * compBx);
+            img.at(i, j).y += compAy * alphaA  + (255 - alphaA) * (alphaB * compBy);
+            img.at(i, j).z += compAz * alphaA  + (255 - alphaA) * (alphaB * compBz);
+            img.at(i, j).w += alphaA + ( 255 - alphaA) * alphaB;*/
+            img.at(i, j).x += compAx + (255.0f - alphaA) * compBx;
+            img.at(i, j).y += compAy + (255.0f - alphaA) * compBy;
+            img.at(i, j).z += compAz + (255.0f - alphaA) * compBz;
+            img.at(i, j).w += alphaA + (255.0f - alphaA) * alphaB;
 
         }
     }
